@@ -7,10 +7,11 @@ import sympy as sp
 # Ridge Method
 
 
-def Feature_Matrix(poly_degree, x_in):
-    X = np.zeros(len(y), poly_degree)
-    for p in range(poly_degree):
-        X[:,p] = x_in**p
+def FeatureMatrix(poly_degree, x_in, y_in):
+    X = np.ones(len(y), poly_degree*poly_degree/2)
+    for p in range(1,poly_degree):
+        for a in range(p+1):
+            X[:,] = x_in**p
     return X
 
 def SolveOLS(X, y):
