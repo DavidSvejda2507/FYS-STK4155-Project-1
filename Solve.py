@@ -54,7 +54,6 @@ def PredictFunction(poly_degree, B):
     x = sympy.Symbol('x')
     y = sympy.Symbol('y')
     X = [x]*tot_comb
-    # X[0] = 1
     X[0] = x
     X[1] = y
     if poly_degree > 1:
@@ -83,23 +82,23 @@ def PredictFunction(poly_degree, B):
     return F_predict
 
 def PredictFunctionInter(poly_degree, B):
-    tot_comb = int(0.5*(poly_degree+1)*(poly_degree+2))
+    tot_comb = int(0.5*(poly_degree+1)*(poly_degree+2)-1)
     x = sympy.Symbol('x')
     y = sympy.Symbol('y')
     X = [x]*tot_comb
-    X[0] = 1
-    X[1] = x
-    X[2] = y
+    X[0] = x
+    X[1] = y
     if poly_degree > 1:
-        X[3] = x*x
-        X[4] = y*y
-        X[5] = y*x
+        X[2] = x*x
+        X[3] = y*y
+        X[4] = y*x
     else:
+        X.insert(0, 1)
         X = np.array(X)
         F_predict = lambdify([x, y], X@B)
         return F_predict
-    lower = 3
-    upper = 5
+    lower = 2
+    upper = 4
     for i in range(2, poly_degree):
         prev_l = lower
         prev_u = upper
@@ -111,6 +110,7 @@ def PredictFunctionInter(poly_degree, B):
         for k in range(2, comb):
             X[lower + k] = X[prev_l+k]*x
         X[upper] = X[lower-1]*y
+    X.insert(0, 1)
     X = np.array(X)
     F_predict = lambdify([x, y], X@B)
     return F_predict
@@ -122,7 +122,7 @@ def SolveOLS(X, y):
 
 #λ
 def RidgeMethod(X, y, λ):
-    n = len(y)
+    n = np.shape(X.T @ X)[0]
     I = np.identity(n)
-    B = np.linalg.inv(X.T@X + n*λ*I)@X.T@y
+    B = np.linalg.pinv(X.T @ X + λ*I) @ X.T @ y
     return B

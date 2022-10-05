@@ -17,7 +17,7 @@ def FrankeFunction(x, y):
 
 #σ
 def Scaling(X):
-    m = 0 #np.mean(X, axis=0)
+    m = np.mean(X, axis=0)
     s = 1 #np.std(X, axis=0, keepdims=True)
     X = (X-m)/s
     return X, m, s
@@ -36,7 +36,7 @@ def GenerateData(n, noise=False, noise_strength=0.1):
     x = np.random.rand(n)
     y = np.random.rand(n)
     F = FrankeFunction(x, y)
-    if noise==True:
+    if noise:
         return x, y, F + noise_strength*np.random.randn(len(y), len(x))
     else:
         return x, y, F

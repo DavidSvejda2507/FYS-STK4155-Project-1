@@ -1,6 +1,6 @@
 import os
 import numpy as np
-
+import matplotlib.pyplot as plt
 # To-Do
 # MSE, R2
 # Bias Variance trade off
@@ -21,8 +21,17 @@ def R2(y, y_predict):
     S_tot = (y-y_mean).T@(y-y_mean)
     return 1 - S_res/S_tot
 
-def PolyPlot(MSE, R2, figure_id):
-    fig = plt.figure()
-    fig.plot()
-    plt.legend()
-    plt.savefig(f'figures/{figure_id}.pdf')
+def plotfunc(filename, data, xlabel = 'Poly degree', ylabel = 'MSE',
+        yscale = 'log', legend = True, figs = (10, 6), ret = False):
+    fig = plt.figure(figsize=figs)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    for key, value in data.items():
+        plt.plot(value[0], value[1], label=key)
+    plt.yscale(yscale)
+    if legend:
+        plt.legend()
+    plt.savefig(f'figures/{filename}')
+    if ret:
+        return fig
+    plt.close(fig)
