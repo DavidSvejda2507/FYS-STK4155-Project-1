@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import GlobVar as gv
 
 for N in gv.N_list:
-    for ns in [0, 0.3, 1]:
+    for ns in [0.1, 0.3]:
         x, y, F = Dataset.GenerateData(1000, True, ns)
         x_train, x_test, y_train, y_test, F_train, F_test = train_test_split(x, y, F, test_size=0.2)
 

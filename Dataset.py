@@ -37,7 +37,7 @@ def GenerateData(n, noise=False, noise_strength=0.1):
     y = np.random.rand(n)
     F = FrankeFunction(x, y)
     if noise:
-        return x, y, F + noise_strength*np.random.randn(len(y), len(x))
+        return x, y, F + noise_strength*np.random.randn(len(F))
     else:
         return x, y, F
 
