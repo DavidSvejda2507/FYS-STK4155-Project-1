@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import GlobVar as gv
 
 for N in gv.N_list:
-    for ns in [0.1, 0.3]:
+    for ns in [0, 0.1, 0.3]:
         x, y, F = Dataset.GenerateData(1000, True, ns)
         x_train, x_test, y_train, y_test, F_train, F_test = train_test_split(x, y, F, test_size=0.2)
 
@@ -24,21 +24,8 @@ for N in gv.N_list:
             F_predict_B = Solve.PredictFunctionInter(p, B_)(x_test, y_test)
             MSE_List[p-1] = Analysis.MSE(F_test, F_predict_B)
             R2_List[p-1] = Analysis.R2(F_test, F_predict_B)
-
-            # plt.figure(figsize=(10,6))
-            # plt.subplot(121)
-            # plt.plot(x_train, F_train_sc, '.')
-            # plt.plot(x_train, X@B, '.')
-            # plt.subplot(122)
-            # plt.plot(x_test, F_test, '.')
-            # plt.plot(x_test, F_predict_B, '.')
-            # #plt.show()
-        fig = plt.figure(figsize=(10, 6))
-        plt.subplot(121, title='MSE', xlabel='Polynomial Degree')
-        plt.plot(poly_range, MSE_List)
-        plt.subplot(122, title='R2', xlabel='Polynomial Degree')
-        plt.plot(poly_range, R2_List)
-        plt.savefig(f'Figures/MSER2polyN{N}deg{poly_max}ns{ns}.pdf')
-        plt.close(fig)
-
-        #plt.show()
+        Analysis.plotfunc(f'Updated/MSE OLS/MSEN{N}P{p}ns{ns}.pdf',
+                        {
+                        'σ^2' : (poly_range, np.repeat(ns**2, len(poly_range))),
+                        'MSE' : (poly_range, MSE_List)
+                        }, yscale='linear')

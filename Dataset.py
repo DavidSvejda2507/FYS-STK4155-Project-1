@@ -1,5 +1,6 @@
 import hashlib
 import numpy as np
+from imageio import imread
 
 loss = '|I|Ii|II|I_|'
 seed = int(hashlib.sha1(loss.encode("utf-8")).hexdigest(), 16) % (10 ** 8)
@@ -18,7 +19,13 @@ def FrankeFunction(x, y):
 #σ
 def Scaling(X):
     m = np.mean(X, axis=0)
-    s = 1 #np.std(X, axis=0, keepdims=True)
+    s = np.std(X, axis=0)
+    if isinstance(s, np.ndarray):
+        for i, ss in enumerate(s):
+            if ss<1:
+                s[i] = 1
+    else:
+        if s < 1: s = 1
     X = (X-m)/s
     return X, m, s
 
@@ -41,4 +48,11 @@ def GenerateData(n, noise=False, noise_strength=0.1):
     else:
         return x, y, F
 
+def GetRealData(n):
+    assert n in [1, 2]
+    t = imread(f'Data/SRTM_data_Norway_{n}.tif')[:200:10, :200:10]
+    x = np.linspace(0, 1, t.shape[0])
+    y = np.linspace(0, 1, t.shape[1])
+    x, y = np.meshgrid(x, y)
+    return x.ravel(), y.ravel(), t.ravel()
 # def Bootstrap(X):
